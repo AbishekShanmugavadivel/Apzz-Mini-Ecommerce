@@ -1,28 +1,33 @@
 const express = require('express');
 const app = express();
 const dotenv = require('dotenv');
-const path = require('path');
 const cors = require('cors');
 const connectDatabase = require('./config/connectDatabase');
-dotenv.config({path: path.join(__dirname, 'config', 'config.env')})
 
+// Load env variables
+dotenv.config();
+
+// Connect to MongoDB
+connectDatabase();
+
+// Import Routes
 const products = require('./routes/product');
 const orders = require('./routes/order');
 const admin = require('./routes/admin');
 const auth = require('./routes/auth');
 const cart = require('./routes/cart');
 
-connectDatabase();
-
-// CORS Configuration for deployment
+// CORS Configuration
 app.use(cors({
-    origin: process.env.NODE_ENV === 'production' 
-        ? ['https://your-vercel-domain.vercel.app', 'https://apzzz.vercel.app']
-        : ['http://localhost:3000'],
+    origin: [
+        "http://localhost:3000",
+        "https://apzzz.vercel.app"
+    ],
     credentials: true
 }));
 
-app.use(express.json({ limit: '10mb' }));
+// Body parser
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // API Routes
@@ -32,24 +37,23 @@ app.use('/api/v1/', admin);
 app.use('/api/v1/', auth);
 app.use('/api/v1/', cart);
 
-// Health check endpoint
+// Health Check API
 app.get('/api/health', (req, res) => {
-    res.json({ 
-        status: 'OK', 
-        message: 'Apzzz Backend API is running',
-        timestamp: new Date().toISOString()
+    res.json({
+        status: "OK",
+        message: "Apzzz Backend API Running",
+        time: new Date()
     });
 });
 
-if (process.env.NODE_ENV == 'production') {
-    app.use(express.static(path.join(__dirname, '..', 'frontend', 'build')));
-    app.get('*', (req, res) => {
-        res.sendFile(path.resolve(__dirname, '..', 'frontend', 'build', 'index.html'))
-    });
-}
+// Root route
+app.get('/', (req, res) => {
+    res.send("🚀 Apzzz Backend is Running");
+});
 
+// Start Server
 const PORT = process.env.PORT || 8000;
+
 app.listen(PORT, () => {
-    console.log(`🚀 Apzzz Server listening to Port ${PORT} in ${process.env.NODE_ENV || 'development'}`)
-    console.log(`🌐 API Health Check: http://localhost:${PORT}/api/health`)
+    console.log(`🚀 Server running on port ${PORT}`);
 });
