@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 
 export default function Admin() {
+
     const [product, setProduct] = useState({
         name: '',
         price: '',
@@ -14,46 +15,61 @@ export default function Admin() {
     });
 
     const handleChange = (e) => {
-        setProduct({ ...product, [e.target.name]: e.target.value });
+        setProduct({
+            ...product,
+            [e.target.name]: e.target.value
+        });
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        
+
         fetch(process.env.REACT_APP_API_URL + '/admin/product', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify(product)
         })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                toast.success('Product added successfully!');
-                setProduct({
-                    name: '',
-                    price: '',
-                    description: '',
-                    ratings: '',
-                    category: '',
-                    seller: '',
-                    stock: '',
-                    images: [{ image: '/images/products/1.jpg' }]
-                });
-            } else {
+            .then(res => res.json())
+            .then(data => {
+
+                if (data.success) {
+
+                    toast.success('Product added successfully!');
+
+                    setProduct({
+                        name: '',
+                        price: '',
+                        description: '',
+                        ratings: '',
+                        category: '',
+                        seller: '',
+                        stock: '',
+                        images: [{ image: '/images/products/1.jpg' }]
+                    });
+
+                } else {
+                    toast.error('Error adding product');
+                }
+
+            })
+            .catch(() => {
                 toast.error('Error adding product');
-            }
-        })
-        .catch(err => {
-            toast.error('Error adding product');
-        });
+            });
     };
 
     return (
         <div className="container container-fluid">
+
             <div className="row">
+
                 <div className="col-12 col-md-8 offset-md-2">
+
                     <h2 className="mt-5">Add New Product</h2>
+
                     <form onSubmit={handleSubmit}>
+
                         <div className="form-group">
                             <label htmlFor="name_field">Name</label>
                             <input
@@ -66,6 +82,7 @@ export default function Admin() {
                                 required
                             />
                         </div>
+
 
                         <div className="form-group">
                             <label htmlFor="price_field">Price</label>
@@ -80,6 +97,7 @@ export default function Admin() {
                             />
                         </div>
 
+
                         <div className="form-group">
                             <label htmlFor="description_field">Description</label>
                             <textarea
@@ -93,9 +111,17 @@ export default function Admin() {
                             ></textarea>
                         </div>
 
+
                         <div className="form-group">
                             <label htmlFor="category_field">Category</label>
-                            <select className="form-control" id="category_field" name="category" value={product.category} onChange={handleChange} required>
+                            <select
+                                className="form-control"
+                                id="category_field"
+                                name="category"
+                                value={product.category}
+                                onChange={handleChange}
+                                required
+                            >
                                 <option value="">Select Category</option>
                                 <option value="Mobile Phones">Mobile Phones</option>
                                 <option value="Laptops">Laptops</option>
@@ -104,6 +130,7 @@ export default function Admin() {
                                 <option value="Sports">Sports</option>
                             </select>
                         </div>
+
 
                         <div className="form-group">
                             <label htmlFor="seller_field">Seller</label>
@@ -118,6 +145,7 @@ export default function Admin() {
                             />
                         </div>
 
+
                         <div className="form-group">
                             <label htmlFor="stock_field">Stock</label>
                             <input
@@ -130,6 +158,7 @@ export default function Admin() {
                                 required
                             />
                         </div>
+
 
                         <div className="form-group">
                             <label htmlFor="ratings_field">Ratings</label>
@@ -147,6 +176,7 @@ export default function Admin() {
                             />
                         </div>
 
+
                         <button
                             type="submit"
                             id="login_button"
@@ -154,9 +184,13 @@ export default function Admin() {
                         >
                             CREATE
                         </button>
+
                     </form>
+
                 </div>
+
             </div>
+
         </div>
     );
 }
