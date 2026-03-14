@@ -4,7 +4,7 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const connectDatabase = require('./config/connectDatabase');
 
-// Load env variables
+// Load environment variables
 dotenv.config();
 
 // Connect to MongoDB
@@ -17,43 +17,48 @@ const admin = require('./routes/admin');
 const auth = require('./routes/auth');
 const cart = require('./routes/cart');
 
-// CORS Configuration
-app.use(cors({
+// ================= CORS CONFIG =================
+app.use(
+  cors({
     origin: [
-        "http://localhost:3000",
-        "https://apzzz.vercel.app"
+      "http://localhost:3000",
+      "https://apzz-mini-ecommerce-abishekshanmugavadivels-projects.vercel.app"
     ],
     credentials: true
-}));
+  })
+);
 
-// Body parser
+// Allow preflight requests
+app.options('*', cors());
+
+// ================= BODY PARSER =================
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// API Routes
+// ================= API ROUTES =================
 app.use('/api/v1/', products);
 app.use('/api/v1/', orders);
 app.use('/api/v1/', admin);
 app.use('/api/v1/', auth);
 app.use('/api/v1/', cart);
 
-// Health Check API
+// ================= HEALTH CHECK =================
 app.get('/api/health', (req, res) => {
-    res.json({
-        status: "OK",
-        message: "Apzzz Backend API Running",
-        time: new Date()
-    });
+  res.json({
+    status: "OK",
+    message: "Apzzz Backend API Running",
+    time: new Date()
+  });
 });
 
-// Root route
+// ================= ROOT ROUTE =================
 app.get('/', (req, res) => {
-    res.send("🚀 Apzzz Backend is Running");
+  res.send("🚀 Apzzz Backend is Running");
 });
 
-// Start Server
+// ================= START SERVER =================
 const PORT = process.env.PORT || 8000;
 
 app.listen(PORT, () => {
-    console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });
