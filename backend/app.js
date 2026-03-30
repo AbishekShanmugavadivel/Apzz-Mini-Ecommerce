@@ -36,10 +36,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // ================= API ROUTES =================
+app.use('/api/v1/auth', auth);
 app.use('/api/v1/', products);
 app.use('/api/v1/', orders);
 app.use('/api/v1/', admin);
-app.use('/api/v1/', auth);
 app.use('/api/v1/', cart);
 
 // ================= HEALTH CHECK =================
