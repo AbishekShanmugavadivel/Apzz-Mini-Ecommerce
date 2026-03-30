@@ -3,7 +3,7 @@ import axios from "axios";
 const API_BASE_URL =
   process.env.REACT_APP_API_URL
     ? `${process.env.REACT_APP_API_URL}/api/v1`
-    : "http://localhost:8000/api/v1";
+    : "https://apzz-mini-ecommerce.onrender.com";
 
 // Create axios instance
 const api = axios.create({
